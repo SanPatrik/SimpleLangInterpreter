@@ -1,4 +1,0 @@
-READ,x
-READ,y
-+,x,y,sum
-WRITE,sum
