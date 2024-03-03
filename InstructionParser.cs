@@ -11,7 +11,7 @@ public class InstructionParser {
         { ">=", InstructionType.GREATER_EQUAL },
         { "==", InstructionType.EQUALS },
         { "=", InstructionType.ASSIGN },
-        // Add other mappings as necessary
+        
     };
 
     public Instruction Parse(string line) {

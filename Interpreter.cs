@@ -5,8 +5,8 @@ public class Interpreter
     private List<Instruction> instructions = new List<Instruction>();
     private VariableStore variables = new VariableStore();
     private InstructionParser parser = new InstructionParser();
-    private int currentLine = 0; // Updated to track the current line number for error handling
-    private bool jumpExecuted = false; // Add this flag
+    private int currentLine = 0;
+    private bool jumpExecuted = false;
 
     public void LoadInstructions(string filePath)
     {
@@ -19,7 +19,7 @@ public class Interpreter
             }
             catch (Exception e)
             {
-                ErrorHandler.ReportError(e.Message, i + 1); // Line numbers start at 1
+                ErrorHandler.ReportError(e.Message, i + 1);
             }
         }
     }
@@ -31,16 +31,16 @@ public class Interpreter
             Instruction instruction = instructions[currentLine];
             try
             {
-                jumpExecuted = false; // Reset the flag at the start of each loop iteration
+                jumpExecuted = false;
                 ExecuteInstruction(instruction);
             }
             catch (Exception e)
             {
-                ErrorHandler.ReportError(e.Message, currentLine + 1); // Reporting errors with the correct line number
-                return; // Exit execution on error
+                ErrorHandler.ReportError(e.Message, currentLine + 1);
+                return;
             }
 
-            if (!jumpExecuted) // Only increment if no jump was executed
+            if (!jumpExecuted)
             {
                 currentLine++;
             }
@@ -133,41 +133,37 @@ public class Interpreter
                     variables.ResolveValue(instruction.Operands[1]));
                 break;
             case InstructionType.JUMP:
-                int jumpTarget = variables.ResolveValue(instruction.Operands[0]) - 1; // Convert to zero-based index
+                int jumpTarget = variables.ResolveValue(instruction.Operands[0]) - 1;
                 if (jumpTarget >= 0 && jumpTarget < instructions.Count) {
                     currentLine = jumpTarget;
                     jumpExecuted = true;
                 } else {
                     ErrorHandler.ReportError($"Invalid jump target '{instruction.Operands[0]}'.", currentLine + 1);
-                    // No need for return here as ErrorHandler exits the program
                 }
                 break;
             case InstructionType.JUMPT:
                 if (variables.ResolveValue(instruction.Operands[0]) != 0) {
-                    int jumptTarget = variables.ResolveValue(instruction.Operands[1]) - 1; // Convert to zero-based index
+                    int jumptTarget = variables.ResolveValue(instruction.Operands[1]) - 1;
                     if (jumptTarget >= 0 && jumptTarget < instructions.Count) {
                         currentLine = jumptTarget;
                         jumpExecuted = true;
                     } else {
                         ErrorHandler.ReportError($"Invalid jump target '{instruction.Operands[1]}'.", currentLine + 1);
-                        // No need for return here as ErrorHandler exits the program
                     }
                 }
                 break;
             case InstructionType.JUMPF:
                 if (variables.ResolveValue(instruction.Operands[0]) == 0) {
-                    int jumpfTarget = variables.ResolveValue(instruction.Operands[1]) - 1; // Convert to zero-based index
+                    int jumpfTarget = variables.ResolveValue(instruction.Operands[1]) - 1;
                     if (jumpfTarget >= 0 && jumpfTarget < instructions.Count) {
                         currentLine = jumpfTarget;
                         jumpExecuted = true;
                     } else {
                         ErrorHandler.ReportError($"Invalid jump target '{instruction.Operands[1]}'.", currentLine + 1);
-                        // No need for return here as ErrorHandler exits the program
                     }
                 }
                 break;
             case InstructionType.NOP:
-                // No operation
                 break;
             default:
                 Console.WriteLine($"Unknown instruction: {instruction.Operation}");

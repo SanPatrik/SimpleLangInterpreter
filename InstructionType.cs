@@ -16,5 +16,5 @@ public enum InstructionType {
     JUMPT,
     JUMPF,
     NOP,
-    UNKNOWN  // Add this to handle unexpected instructions
+    UNKNOWN
 }
